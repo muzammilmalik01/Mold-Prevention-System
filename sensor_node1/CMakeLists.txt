@@ -10,3 +10,4 @@ project(DHT20)
 
 target_sources(app PRIVATE src/main.c)
 zephyr_include_directories(drivers)
+add_subdirectory(src/modules)
