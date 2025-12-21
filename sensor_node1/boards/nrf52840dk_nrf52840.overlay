@@ -4,6 +4,10 @@
         sensor-a = &dht20_a;
         sensor-b = &dht20_b;
     };
+
+    chosen {
+        zephyr,entropy = &rng;
+    };
 };
 /* --- BUS 1 (Existing) --- */
 &i2c0 {

@@ -1,6 +1,7 @@
 {
     "nrf-connect.applications": [
-        "${workspaceFolder}/sensor_node1"
+        "${workspaceFolder}/sensor_node1",
+        "${workspaceFolder}/server_node"
     ],
     "files.associations": {
         "system_health.h": "c"
