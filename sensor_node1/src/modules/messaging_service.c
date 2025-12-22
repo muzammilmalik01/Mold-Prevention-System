@@ -3,6 +3,7 @@
 #include <zephyr/logging/log.h>
 #include <openthread/coap.h>
 #include <openthread/thread.h>
+#include <math.h>
 #include <stdio.h> 
 
 LOG_MODULE_REGISTER(messaging, LOG_LEVEL_INF);
@@ -12,7 +13,7 @@ LOG_MODULE_REGISTER(messaging, LOG_LEVEL_INF);
 #define SERVER_ADDR "fdde:ad00:beef:0:0:0:0:1" 
 #define URI_PATH "storedata"
 
-static char json_buffer[128];
+static char json_buffer[256];
 
 // --- Callback for Delivery Confirmation ---
 // FIX 2: This function catches the ACK (Success) or Timeout (Fail)
@@ -70,9 +71,28 @@ void msg_init(void) {
     otCoapStart(p_instance, OT_DEFAULT_COAP_PORT); 
 }
 
-void msg_send_telemetry(float temp_c, float rh_percent, float mold_index, int status_code) {
+
+void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status) {
     snprintf(json_buffer, sizeof(json_buffer), 
-             "{\"type\":\"data\",\"T\":%.1f,\"H\":%.1f,\"M\":%.2f,\"S\":%d}", 
-             (double)temp_c, (double)rh_percent, (double)mold_index, status_code);
+             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temperature\":%.2f,\"humidity\":%.2f,\"mold_index\":%.2f,\"mold_risk_status\":%d,\"growth_status\":%d}", 
+             message_type, 
+             room_name, 
+             (double)temp_c, 
+             (double)rh_percent, 
+             (double)mold_index, 
+             mold_risk_status, 
+             (int)growth_status);
+             
+    _send_coap_payload(json_buffer);
+}
+
+void msg_send_system_health_status(char *message_type, char* room_name, int sensor_1, int sensor_2) {
+    snprintf(json_buffer, sizeof(json_buffer), 
+             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"sensor_1_status\":%d,\"sensor_2_status\":%d}", 
+             message_type, 
+             room_name, 
+             sensor_1, 
+             sensor_2);
+             
     _send_coap_payload(json_buffer);
 }

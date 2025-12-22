@@ -25,12 +25,13 @@ int main(void)
         vtt_init(&room_state, VTT_MAT_SENSITIVE);
         msg_init();
         while (1) {
-                float current_temp = 24.0;
-                float current_hum = 55.0;
-                float current_index = 1.2;
                 
-                // Send it!
-                msg_send_telemetry(current_temp, current_hum, current_index, 1);
+                // Sending a normal update
+                msg_send_mold_status("DATA", "LivingRoom", 24.5, 60.2, 1.5, 1, true);
+
+                // Sending an Alert (High Mold)
+                msg_send_mold_status("ALERT", "LivingRoom", 26.0, 95.0, 3.5, 3, true);
+
                 k_sleep(K_SECONDS(20));
         }
         // check_system_health(dht20_dev_a, dht20_dev_b, status);
