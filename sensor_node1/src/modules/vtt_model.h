@@ -1,5 +1,6 @@
 #ifndef vtt_model
 #define vtt_model
+#include <stdbool.h>
 
 // --- Configuration Types ---
 
@@ -28,7 +29,7 @@ typedef struct {
     vtt_material_t material;
     float surface_quality;
     float wood_species;
-    int condition;
+    bool growing_condition;
     float rh_mat;
 
     //Dynamic States, change after every step.

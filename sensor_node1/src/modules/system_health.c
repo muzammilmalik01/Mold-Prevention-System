@@ -46,8 +46,8 @@ static health_status_code_t check_sensor(const struct device *sensor, float* fin
     if ((temperature.val1 < TEMP_MIN_VALID || temperature.val1 > TEMP_MAX_VALID) && (humidity.val1 < HUMIDITY_MIN_VALID || humidity.val1 > HUMIDITY_MAX_VALID)) return VALUES_OUT_OF_RANGE;
     *final_temp = sensor_value_to_double(&temperature);
     *final_humi = sensor_value_to_double(&humidity);
-    LOG_DBG("%s: T=%.2f, H=%.2f", sensor->name, *final_temp, *final_humi);
-    printk("%s: T=%.2f, H=%.2f", sensor->name, *final_temp, *final_humi);
+    // LOG_DBG("%s: T=%.2f, H=%.2f", sensor->name, *final_temp, *final_humi);
+    // printk("%s: T=%.2f, H=%.2f", sensor->name, *final_temp, *final_humi);
     return HEALTH_OK;
 }
 

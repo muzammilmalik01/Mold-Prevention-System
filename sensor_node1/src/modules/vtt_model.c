@@ -95,7 +95,7 @@ void vtt_update(vtt_state_t *ctx, float temp_c, float rh_percent, float time_ste
         // growth phase, wet conditions
         ctx -> time_wet_hours += time_step_hours;
         ctx -> time_dry_hours = 0; 
-        ctx -> condition = 1; //Growing Conditions 
+        ctx -> growing_condition = true; //Growing Conditions 
 
         // 1. Calculate Maximum Possible Mold Index
 
@@ -122,7 +122,7 @@ void vtt_update(vtt_state_t *ctx, float temp_c, float rh_percent, float time_ste
         // decline phase, dry conditions
         ctx -> time_dry_hours += time_step_hours;
         ctx -> time_wet_hours = 0;
-        ctx -> condition = 0; //Decline Conditions 
+        ctx -> growing_condition = false; //Decline Conditions 
 
         float decline_rate = 0.0f;
 

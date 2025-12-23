@@ -74,7 +74,7 @@ void msg_init(void) {
 
 void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status) {
     snprintf(json_buffer, sizeof(json_buffer), 
-             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temperature\":%.2f,\"humidity\":%.2f,\"mold_index\":%.2f,\"mold_risk_status\":%d,\"growth_status\":%d}", 
+             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f,\"mold_index\":%.2f,\"mold_risk_status\":%d,\"growth_status\":%d}", 
              message_type, 
              room_name, 
              (double)temp_c, 
@@ -93,6 +93,17 @@ void msg_send_system_health_status(char *message_type, char* room_name, int sens
              room_name, 
              sensor_1, 
              sensor_2);
+             
+    _send_coap_payload(json_buffer);
+}
+
+void msg_send_simple_data(char *message_type, char* room_name, float temp_c, float rh_percent){
+    snprintf(json_buffer, sizeof(json_buffer), 
+             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f}", 
+             message_type, 
+             room_name, 
+             temp_c, 
+             rh_percent);
              
     _send_coap_payload(json_buffer);
 }
