@@ -5,6 +5,7 @@
 #include <openthread/coap.h>
 
 #include "network_listener.h"
+#include "serial_bridge.h"
 #include "shared_types.h"
 
 #define STACKSIZE 2048
@@ -20,6 +21,7 @@ K_THREAD_STACK_DEFINE(network_thread_stack, STACKSIZE);
 void network_thread_entrypoint(void *p1, void *p2, void *p3){
 	LOG_INF("Starting Network Listener...");
 	network_listener_init(&server_queue);
+	serial_bridge_init(&server_queue);
 
 	while(1){
 		k_msleep(10000); 

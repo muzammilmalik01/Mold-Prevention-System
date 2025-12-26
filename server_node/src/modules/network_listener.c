@@ -85,7 +85,7 @@ static void storedata_request_handler(void *context, otMessage *message, const o
     if (k_msgq_put(outgoing_queue, &msg, K_NO_WAIT) != 0) {
         printk("Queue full! Dropping packet from %s", msg.source_ip);
     } else {
-        printk("\n\nReceived from %s: %s", msg.source_ip, msg.json_payload);
+        // printk("\n\nReceived from %s: %s", msg.source_ip, msg.json_payload);
     }
 
     if (otCoapMessageGetType(message) == OT_COAP_TYPE_CONFIRMABLE) {
