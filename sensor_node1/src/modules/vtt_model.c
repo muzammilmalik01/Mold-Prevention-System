@@ -5,6 +5,8 @@
  * 1. Critical Relative Humidity (RH_crit) as a function of Temperature.
  * 2. Mold Growth Rate (dM/dt > 0) based on Temp, RH, and Surface Quality.
  * 3. Mold Decline Rate (dM/dt < 0) based on dry periods.
+ * @authors: muzamil.py, Google Gemini 3 Pro
+ * NOTE: Main Architecture designed by muzamil.py. Optimization, Code Reviews and Code Documentation by Google Gemini 3 Pro.
  */
 #include "vtt_model.h"
 #include <math.h>

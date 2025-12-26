@@ -3,6 +3,8 @@
  * @brief Implementation of CoAP Messaging over OpenThread
  * * Uses the Zephyr OpenThread API to construct CoAP Confirmable (CON) PUT requests
  * containing JSON payloads.
+ * @authors: muzamil.py, Google Gemini 3 Pro
+ * NOTE: Main Architecture designed by muzamil.py. Optimization, Code Reviews and Code Documentation by Google Gemini 3 Pro.
  */
 #include "messaging_service.h"
 #include <zephyr/kernel.h>

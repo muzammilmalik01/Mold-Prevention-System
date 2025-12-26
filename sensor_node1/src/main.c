@@ -6,9 +6,8 @@
  * 2. Telemetry Reporting (Temp/Humidity)
  * 3. VTT Mold Risk Modeling (Edge Computing)
  * * @platform Nordic nRF52840 (Zephyr RTOS)
- * @author muzamil.py
- * @author Google Gemini 3 Pro
- * @date 2023-12-23
+ * @authors: muzamil.py, Google Gemini 3 Pro
+ * NOTE: Main Architecture designed by muzamil.py. Optimization, Code Reviews and Code Documentation by Google Gemini 3 Pro.
  */
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>

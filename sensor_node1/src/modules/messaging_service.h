@@ -6,9 +6,8 @@
  * * @note This module is NOT thread-safe by itself. The caller must ensure
  * mutex locking (e.g., using coap_lock) before calling send functions
  * to prevent buffer corruption.
- * * @author muzamil.py
- * @author Google Gemini 3 Pro
- * @date 2023-12-23
+ * @authors: muzamil.py, Google Gemini 3 Pro
+ * NOTE: Main Architecture designed by muzamil.py. Optimization, Code Reviews and Code Documentation by Google Gemini 3 Pro.
  */
 
 #ifndef MESSAGING_SERVICE_H

@@ -7,9 +7,8 @@
  * - Sensor initialization failures
  * - Data validity ranges
  * - Drift between redundant sensors
- * * @author muzamil.py
- * @author Google Gemini 3 Pro
- * @date 2023-12-23
+ * @authors: muzamil.py, Google Gemini 3 Pro
+ * NOTE: Main Architecture designed by muzamil.py. Optimization, Code Reviews and Code Documentation by Google Gemini 3 Pro.
  */
 #ifndef system_health_h
 #define system_health_h
