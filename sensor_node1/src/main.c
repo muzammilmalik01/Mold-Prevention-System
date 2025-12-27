@@ -32,7 +32,7 @@
 #define ROOM_NAME "Living Room"
 #define ALERT_MESSAGE "ALERT"
 #define DATA_MESSAGE "DATA"
-#define TIME_STEP 0.25f
+#define TIME_STEP 1.0f
 #define STACK_SIZE 2048
 
 // * --- Global Status Flags (Protected by Logic) --- *
@@ -223,7 +223,7 @@ void vtt_model_entry_point(void *p1, void *p2, void *p3){
                 } else {
                         LOG_WRN("[VTT] Skipped: Sensors unavailable");
                 }
-                k_msleep(900000);
+                k_msleep(3600000); // 1 hour = 3600000 milliseconds
         }
 }
 

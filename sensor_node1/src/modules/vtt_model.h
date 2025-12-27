@@ -31,7 +31,7 @@ typedef enum {
     VTT_MAT_SENSITIVE = 0, 
 
     /** * @brief Medium Resistant (k1=0.072)
-     * Examples: Concrete, cement, aerated concrete, glued wood.
+     * Examples: Spruce sapwood,Concrete, cement, aerated concrete, glued wood.
      */
     VTT_MAT_MEDIUM_RESISTANT, 
 

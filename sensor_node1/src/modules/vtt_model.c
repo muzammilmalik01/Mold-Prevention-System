@@ -5,6 +5,12 @@
  * 1. Critical Relative Humidity (RH_crit) as a function of Temperature.
  * 2. Mold Growth Rate (dM/dt > 0) based on Temp, RH, and Surface Quality.
  * 3. Mold Decline Rate (dM/dt < 0) based on dry periods.
+ * 
+ * Mold growth model based on the VTT Mold Index Model
+
+ * @cite: [1] Viitanen, H. A., "Modelling the time factor in the development of mould fungi", Holzforschung, vol. 51, no. 1, pp. 6–14, 1997.
+ * @cite: [2] Ojanen, T. et al., "Mold growth modeling of building structures using sensitivity classes of materials", Building and Environment, vol. 45, no. 3, pp. 699–716, 2010.
+ * @cite: [3] Viitanen, H. et al., "Towards modelling of decay risk of wooden materials", Wood Material Science & Engineering, vol. 2, pp. 150–168, 2007.
  * @authors: muzamil.py, Google Gemini 3 Pro
  * NOTE: Main Architecture designed by muzamil.py. Optimization, Code Reviews and Code Documentation by Google Gemini 3 Pro.
  */
@@ -88,15 +94,15 @@ void vtt_init(vtt_state_t *ctx, vtt_material_t mat){
         break;
 
     case VTT_MAT_MEDIUM_RESISTANT:
-        ctx->surface_quality = 1.0f; // Smoother
+        ctx->surface_quality = 0.0f; // Smoother
         ctx->wood_species = 1.0f;
-        ctx->rh_mat = 3.0f;          // Needs +3% higher RH to grow
+        ctx->rh_mat = 0.0f;          // No extra resistance
         break;
 
     case VTT_MAT_RESISTANT:
         ctx-> surface_quality = 1.0f;
         ctx-> wood_species = 1.0f;
-        ctx-> rh_mat = 6.0f;
+        ctx-> rh_mat = 5.0f;
         break;
 
     default: // Fail-safe defaults (Worst Case)
@@ -156,11 +162,11 @@ void vtt_update(vtt_state_t *ctx, float temp_c, float rh_percent, float time_ste
         // Short dry spells cause slow decline; long spells kill spores faster.
         // TODO: Decide Decline Rates - Temporary decline rates, these are not final - will have to further research to get the best rates.
         if (ctx->time_dry_hours <= 6.0f){
-            decline_rate = -0.032f; //Initial resistance (Latency)
+            decline_rate = -0.00133f; //Initial resistance (Latency)
         } else if (ctx->time_dry_hours <= 24.0f) { 
             decline_rate = 0.0f; // Stability period
         } else {
-            decline_rate = -0.016f; // Long-term die-off
+            decline_rate = -0.000667f; // Long-term die-off
         }
 
         // Step B: Integrate
