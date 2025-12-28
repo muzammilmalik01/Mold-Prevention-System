@@ -35,6 +35,7 @@
 #define TIME_STEP 1.0f
 #define STACK_SIZE 2048
 #define IS_SIMULATION_NODE false
+int sim_flag = IS_SIMULATION_NODE ? 1 : 0;
 
 // * --- Global Status Flags (Protected by Logic) --- *
 bool sensor_a_enabled = false;
@@ -210,7 +211,7 @@ void simple_data_entry_point(void *p1, void *p2, void *p3){
                         k_mutex_lock(&coap_lock, K_FOREVER);
                         
                         LOG_INF("[TELEMETRY] Sending Sensor Data....");
-                        msg_send_simple_data(DATA_MESSAGE, ROOM_NAME, temparature, humidity);
+                        msg_send_simple_data(DATA_MESSAGE, ROOM_NAME, temparature, humidity, sim_flag);
                         k_mutex_unlock(&coap_lock);
                 } else {
                         LOG_WRN("[TELEMETRY] Skipped: Sensors unavailable");
@@ -256,7 +257,7 @@ void vtt_model_entry_point(void *p1, void *p2, void *p3){
                         char *msg_type = (mold_risk_level == MOLD_RISK_CLEAN && !room_state.growing_condition) 
                              ? DATA_MESSAGE : ALERT_MESSAGE;
 
-                        msg_send_mold_status(msg_type, ROOM_NAME, temparature, humidity, room_state.mold_index, mold_risk_level, room_state.growing_condition);
+                        msg_send_mold_status(msg_type, ROOM_NAME, temparature, humidity, room_state.mold_index, mold_risk_level, room_state.growing_condition, sim_flag);
                         k_mutex_unlock(&coap_lock);
 
                 } else {

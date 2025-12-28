@@ -106,18 +106,19 @@ void msg_init(void) {
 }
 
 
-void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status) {
+void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status, bool is_simulation_node) {
     // Note: We cast floats to (double) because standard snprintf implementation 
     // in some embedded C libraries (like Newlib) expects doubles for %f.
     snprintf(json_buffer, sizeof(json_buffer), 
-             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f,\"mold_index\":%.2f,\"mold_risk_status\":%d,\"growth_status\":%d}", 
+             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f,\"mold_index\":%.2f,\"mold_risk_status\":%d,\"growth_status\":%d, \"is_simulation_node\":%d}", 
              message_type, 
              room_name, 
              (double)temp_c, 
              (double)rh_percent, 
              (double)mold_index, 
              mold_risk_status, 
-             (int)growth_status);
+             (int)growth_status,
+             (int)is_simulation_node);
              
     _send_coap_payload(json_buffer);
 }
@@ -133,13 +134,14 @@ void msg_send_system_health_status(char *message_type, char* room_name, int sens
     _send_coap_payload(json_buffer);
 }
 
-void msg_send_simple_data(char *message_type, char* room_name, float temp_c, float rh_percent){
+void msg_send_simple_data(char *message_type, char* room_name, float temp_c, float rh_percent, bool is_simulation_node){
     snprintf(json_buffer, sizeof(json_buffer), 
-             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f}", 
+             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f, \"is_simulation_node\":%d}", 
              message_type, 
              room_name, 
              temp_c, 
-             rh_percent);
+             rh_percent,
+            (int)is_simulation_node);
              
     _send_coap_payload(json_buffer);
 }

@@ -34,7 +34,7 @@ void msg_init(void);
  * @param mold_risk_status Risk Level Enum (0=Clean, 1=Warning, 2=Critical)
  * @param growth_status   Boolean indicating if mold is actively growing
  */
-void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status);
+void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status, bool is_simulation_node);
 
 /**
  * @brief Sends System Health diagnostic data.
@@ -53,6 +53,6 @@ void msg_send_system_health_status(char *message_type, char* room_name, int sens
  * @param temp_c          Temperature (Celsius)
  * @param rh_percent      Relative Humidity (%)
  */
-void msg_send_simple_data(char *message_type, char* room_name, float temp_c, float rh_percent);
+void msg_send_simple_data(char *message_type, char* room_name, float temp_c, float rh_percent, bool is_simulation_nod);
 
 #endif
