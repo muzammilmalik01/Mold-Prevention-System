@@ -34,6 +34,7 @@
 #define DATA_MESSAGE "DATA"
 #define TIME_STEP 1.0f
 #define STACK_SIZE 2048
+#define IS_SIMULATION_NODE false
 
 // * --- Global Status Flags (Protected by Logic) --- *
 bool sensor_a_enabled = false;
@@ -65,6 +66,36 @@ K_THREAD_STACK_DEFINE(system_health_stack, STACK_SIZE);
 K_THREAD_STACK_DEFINE(vtt_model_stack, STACK_SIZE);
 K_THREAD_STACK_DEFINE(simple_data_stack, STACK_SIZE);
 
+
+bool get_simulated_weather(float *temp, float *hum) {
+        // 1 Real Minute = 1 Simulated Hour
+        // k_uptime_get() returns milliseconds. 
+        // Divide by 60,000 to get "Real Minutes" which equal "Sim Hours".
+        int64_t sim_hour = k_uptime_get() / 60000; 
+        
+        // Use modulo (%) to loop the 300-hour cycle automatically
+        int64_t current_cycle_hour = sim_hour % 300;
+    
+        bool is_valid = true;
+    
+        // --- PHASE 1: TROPICAL STORM (Hours 0-100) ---
+        if (current_cycle_hour <= 100) {
+            *temp = 28.0; 
+            *hum = 95.0; 
+        } 
+        // --- PHASE 2: DRY SPELL (Hours 101-200) ---
+        else if (current_cycle_hour <= 200) {
+            *temp = 25.0;
+            *hum = 45.0; 
+        }
+        // --- PHASE 3: FREEZE (Hours 201-299) ---
+        else {
+            *temp = 5.0; 
+            *hum = 90.0; 
+        }
+        
+        return is_valid;
+    }
 
 /*
  * @brief Helper function to safely read active sensors.
@@ -167,7 +198,11 @@ void simple_data_entry_point(void *p1, void *p2, void *p3){
 
                 // 1. Get Data
                 k_mutex_lock(&sensors_lock, K_FOREVER);
-                valid_read = get_sensor_data(&temparature, &humidity);
+                if (IS_SIMULATION_NODE) {
+                        valid_read = get_simulated_weather(&temparature, &humidity);
+                } else {
+                        valid_read = get_sensor_data(&temparature, &humidity);
+                }
                 k_mutex_unlock(&sensors_lock);
 
                 // 2. Send Data
@@ -202,7 +237,11 @@ void vtt_model_entry_point(void *p1, void *p2, void *p3){
 
                 // 1. Get Data
                 k_mutex_lock(&sensors_lock, K_FOREVER);
-                valid_read = get_sensor_data(&temparature, &humidity);
+                if (IS_SIMULATION_NODE) {
+                        valid_read = get_simulated_weather(&temparature, &humidity);
+                } else {
+                        valid_read = get_sensor_data(&temparature, &humidity);
+                }
                 k_mutex_unlock(&sensors_lock);
 
                 // 2. Process & Send
