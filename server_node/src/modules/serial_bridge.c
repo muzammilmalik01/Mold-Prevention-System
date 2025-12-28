@@ -45,7 +45,7 @@ void serial_thread_entry(void *p1, void *p2, void *p3){
             
             // 2. Output: Print the payload for Python/Dashboard
             // We use the "[DATA]:" prefix to make parsing robust against log noise.
-            printk("[DATA]: %s\n", msg.json_payload);
+            printk("[DATA]: %s | %s\n", msg.source_ip, msg.json_payload);
         }
     }
 }
