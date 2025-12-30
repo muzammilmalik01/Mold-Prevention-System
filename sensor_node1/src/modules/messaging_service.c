@@ -110,7 +110,7 @@ void msg_send_mold_status(char* message_type, char* room_name, float temp_c, flo
     // Note: We cast floats to (double) because standard snprintf implementation 
     // in some embedded C libraries (like Newlib) expects doubles for %f.
     snprintf(json_buffer, sizeof(json_buffer), 
-             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f,\"mold_index\":%.2f,\"mold_risk_status\":%d,\"growth_status\":%d, \"is_simulation_node\":%d}", 
+             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f,\"mold_index\":%.2f,\"mold_risk_status\":%d,\"growth_status\":%d, \"is_simulated\":%d}", 
              message_type, 
              room_name, 
              (double)temp_c, 
@@ -136,7 +136,7 @@ void msg_send_system_health_status(char *message_type, char* room_name, int sens
 
 void msg_send_simple_data(char *message_type, char* room_name, float temp_c, float rh_percent, bool is_simulation_node){
     snprintf(json_buffer, sizeof(json_buffer), 
-             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f, \"is_simulation_node\":%d}", 
+             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f, \"is_simulated\":%d}", 
              message_type, 
              room_name, 
              temp_c, 

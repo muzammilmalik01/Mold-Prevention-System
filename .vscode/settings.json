@@ -6,5 +6,6 @@
     ],
     "files.associations": {
         "system_health.h": "c"
-    }
+    },
+    "cmake.sourceDirectory": "/Users/muhammadmuzamil/University_Work/RT/Project/mold_prevention_system/sensor_node1"
 }
