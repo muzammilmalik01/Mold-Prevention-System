@@ -23,10 +23,12 @@ LOG_MODULE_REGISTER(node_mng, LOG_LEVEL_INF);
 K_MUTEX_DEFINE(registry_lock); 
 static node_info_t registry[MAX_NODES];
 
-void node_manager_update(const char *ip_addr, const char *room_name) {
+void node_manager_update(const char *ip_addr, const char *room_name, struct k_msgq *queue_ptr) {
     
     bool found = false;
     int64_t now = k_uptime_get();
+    server_message_t msg;
+    
 
     // 1. Acquire Lock
     k_mutex_lock(&registry_lock, K_FOREVER);
@@ -44,6 +46,17 @@ void node_manager_update(const char *ip_addr, const char *room_name) {
             if (!registry[node].is_online){
                 registry[node].is_online = true;
                 LOG_INF("Node Reconnected: %s (%s)", ip_addr, room_name);
+                strncpy(msg.source_ip, ip_addr, sizeof(msg.source_ip) - 1);
+                msg.source_ip[sizeof(msg.source_ip) - 1] = '\0';
+                snprintf(msg.json_payload, sizeof(msg.json_payload), 
+                     "{\"event\":\"node_reconnected\", \"room\":\"%s\", \"ip\":\"%s\"}", 
+                     registry[node].room_name, registry[node].source_ip);
+                
+                if (k_msgq_put(queue_ptr, &msg, K_NO_WAIT) != 0) {
+                LOG_WRN("Queue full! Dropping Reconnection Alert for %s", registry[node].room_name);
+                } else {
+                    LOG_INF("RECONNECTION ALERT SENT: %s", registry[node].room_name);
+                }
             }
             found = true;
             break;
@@ -64,7 +77,18 @@ void node_manager_update(const char *ip_addr, const char *room_name) {
                 registry[node].last_seen = now;
                 registry[node].is_online = true;
                 LOG_INF("New Node Registered: %s (%s)", ip_addr, room_name);
+                strncpy(msg.source_ip, ip_addr, sizeof(msg.source_ip) - 1);
+                msg.source_ip[sizeof(msg.source_ip) - 1] = '\0';
+                snprintf(msg.json_payload, sizeof(msg.json_payload), 
+                     "{\"event\":\"node_joined\", \"room\":\"%s\", \"ip\":\"%s\"}", 
+                     registry[node].room_name, registry[node].source_ip);
                 found = true;
+
+                if (k_msgq_put(queue_ptr, &msg, K_NO_WAIT) != 0) {
+                    LOG_WRN("Queue full! Dropping New Join Alert for %s", registry[node].room_name);
+                    } else {
+                        LOG_INF("NEW NODE JOIN ALERT SENT: %s", registry[node].room_name);
+                    }
                 break;
             }
 

@@ -37,7 +37,7 @@ typedef struct {
  * @param ip_addr   The IPv6 string of the sender.
  * @param room_name The friendly room name extracted from the JSON payload.
  */
-void node_manager_update(const char *ip_addr, const char *room_name);
+void node_manager_update(const char *ip_addr, const char *room_name, struct k_msgq *queue_ptr);
 
 /**
  * @brief Periodically checks for dead nodes.

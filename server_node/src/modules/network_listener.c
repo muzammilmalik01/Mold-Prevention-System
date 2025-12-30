@@ -159,7 +159,7 @@ static void storedata_request_handler(void *context, otMessage *message, const o
     } else {
         // 4. Update Node Registry (Heartbeat)
         parse_room_name(msg.json_payload, room_name_buffer, sizeof(room_name_buffer));
-        node_manager_update(msg.source_ip, room_name_buffer);
+        node_manager_update(msg.source_ip, room_name_buffer, outgoing_queue);
     }
 
     // 5. Send ACK if the sensor asked for confirmation
