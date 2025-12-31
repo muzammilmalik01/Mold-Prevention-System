@@ -157,6 +157,9 @@ bool get_sensor_data(float *temparature, float *humidity)
  */
 void system_health_entry_point(void *p1, void *p2, void *p3){
         health_status_code_t status[2] = {0,0};
+        health_status_code_t previous_status[2] = {0,0};
+        bool state_changed = false;
+
         while(1){
                 LOG_DBG("[HEALTH] Checking Hardware...");
 
@@ -176,11 +179,29 @@ void system_health_entry_point(void *p1, void *p2, void *p3){
                 bool is_critical = (status[0] > 1 || status[1] > 1);
                 if (is_critical){
                         LOG_ERR("[HEALTH] CRITICAL FAILURE! A:%d B:%d", status[0], status[1]);
+                        // if critical or not critical, just send the data as simple. 
                         msg_send_system_health_status(ALERT_MESSAGE, ROOM_NAME, status[0], status[1]);
                 } else {
                         // ! IN CASE OF SENSOR DRIFT - SYSTEM HEALTH WILL BE SENT AS NORMAL
                         msg_send_system_health_status(DATA_MESSAGE, ROOM_NAME, status[0], status[1]);
                 }
+
+                // Logic: If status(current states) are different from Previous States, send an alert. (Sensor/s either broke or fixed)
+                state_changed = (status[0] != previous_status[0]) || (status[1] != previous_status[1]);
+                if (state_changed){
+                        if (!(previous_status[0] == status[0] && previous_status[1] == status[1])){
+                                // send system alert
+                                if((status[0] == HEALTH_OK && status[1] == HEALTH_OK)){
+                                        msg_send_system_alert("sensor_fixed", ROOM_NAME, status[0], status[1]);
+                                        LOG_INF("✅ Sensor State Changed: FIXED");
+                                } else if ((status[0] != HEALTH_OK || status[1] != HEALTH_OK)){
+                                        msg_send_system_alert("sensor_fail", ROOM_NAME, status[0], status[1]);
+                                        LOG_ERR("⚠️ Sensor State Changed: FAILURE Detected");
+                                }
+                        }
+                }
+                previous_status[0] = status[0];
+                previous_status[1] = status[1];
                 k_mutex_unlock(&coap_lock);
                 k_msleep(10000); // Check every 10s
         }

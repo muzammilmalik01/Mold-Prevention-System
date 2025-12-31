@@ -145,3 +145,13 @@ void msg_send_simple_data(char *message_type, char* room_name, float temp_c, flo
              
     _send_coap_payload(json_buffer);
 }
+
+void msg_send_system_alert(char *event, char* room_name, int sensor_1, int sensor_2){
+    snprintf(json_buffer, sizeof(json_buffer), 
+             "{\"event\":\"%s\",\"room_name\":\"%s\",\"s1\":%d, \"s2\":%d}", 
+             event, 
+             room_name, 
+             sensor_1,
+             sensor_2);
+    _send_coap_payload(json_buffer);
+}

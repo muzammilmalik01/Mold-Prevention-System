@@ -26,7 +26,7 @@ void msg_init(void);
 /**
  * @brief Sends VTT Mold Model results to the Server Node.
  * * Formats the mold risk data into a JSON string and sends a CoAP PUT request.
- * * @param message_type    String identifier (e.g., "DATA" or "ALERT")
+ * @param message_type    String identifier (e.g., "DATA" or "ALERT")
  * @param room_name       Location identifier (e.g., "Living Room")
  * @param temp_c          Current Temperature (Celsius)
  * @param rh_percent      Current Relative Humidity (%)
@@ -39,7 +39,7 @@ void msg_send_mold_status(char* message_type, char* room_name, float temp_c, flo
 /**
  * @brief Sends System Health diagnostic data.
  * * Used to report hardware failures or sensor drift issues.
- * * @param message_type    "DATA" (Heartbeat) or "ALERT" (Failure)
+ * @param message_type    "DATA" (Heartbeat) or "ALERT" (Failure)
  * @param room_name       Location identifier
  * @param sensor_1        Status code for Sensor A (0=OK, 1=Drift, 2=Fail)
  * @param sensor_2        Status code for Sensor B
@@ -47,8 +47,18 @@ void msg_send_mold_status(char* message_type, char* room_name, float temp_c, flo
 void msg_send_system_health_status(char *message_type, char* room_name, int sensor_1, int sensor_2);
 
 /**
+ * @brief Sends Sensor Failure or Fix Alert.
+ * * Used to send a Sensor Failure or a Sensor Fix Alert.
+ * @param message_type    Only "ALERT" (Failure)
+ * @param room_name       Location identifier
+ * @param sensor_1        Status code for Sensor A (0=OK, 1=Drift, 2=Fail)
+ * @param sensor_2        Status code for Sensor B
+ */
+void msg_send_system_alert(char *event, char* room_name, int sensor_1, int sensor_2);
+
+/**
  * @brief Sends raw telemetry data (Temperature & Humidity).
- * * @param message_type    Usually "DATA"
+ * @param message_type    Usually "DATA"
  * @param room_name       Location identifier
  * @param temp_c          Temperature (Celsius)
  * @param rh_percent      Relative Humidity (%)
