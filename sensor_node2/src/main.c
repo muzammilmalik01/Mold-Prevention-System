@@ -280,7 +280,7 @@ void vtt_model_entry_point(void *p1, void *p2, void *p3){
                         char *msg_type = (mold_risk_level == MOLD_RISK_CLEAN && !room_state.growing_condition) 
                              ? DATA_MESSAGE : ALERT_MESSAGE;
 
-                        msg_send_mold_status(msg_type, ROOM_NAME, temparature, humidity, room_state.mold_index, mold_risk_level, room_state.growing_condition, sim_flag);
+                             msg_send_mold_status(msg_type, ROOM_NAME, temparature, humidity, room_state.mold_index, mold_risk_level, room_state.growing_condition, room_state.rh_crit, sim_flag);
                         k_mutex_unlock(&coap_lock);
 
                 } else {

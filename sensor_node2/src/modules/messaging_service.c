@@ -106,11 +106,11 @@ void msg_init(void) {
 }
 
 
-void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status, bool is_simulation_node) {
+void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status, float rh_crit, bool is_simulation_node) {
     // Note: We cast floats to (double) because standard snprintf implementation 
     // in some embedded C libraries (like Newlib) expects doubles for %f.
     snprintf(json_buffer, sizeof(json_buffer), 
-             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f,\"mold_index\":%.2f,\"mold_risk_status\":%d,\"growth_status\":%d, \"is_simulated\":%d}", 
+             "{\"message_type\":\"%s\",\"room_name\":\"%s\",\"temparature\":%.2f,\"humidity\":%.2f,\"mold_index\":%.2f,\"mold_risk_status\":%d,\"growth_status\":%d,\"rh_crit\":%.2f, \"is_simulated\":%d}", 
              message_type, 
              room_name, 
              (double)temp_c, 
@@ -118,6 +118,7 @@ void msg_send_mold_status(char* message_type, char* room_name, float temp_c, flo
              (double)mold_index, 
              mold_risk_status, 
              (int)growth_status,
+             (double)rh_crit,
              (int)is_simulation_node);
              
     _send_coap_payload(json_buffer);

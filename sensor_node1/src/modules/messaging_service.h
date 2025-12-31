@@ -31,10 +31,11 @@ void msg_init(void);
  * @param temp_c          Current Temperature (Celsius)
  * @param rh_percent      Current Relative Humidity (%)
  * @param mold_index      Calculated Mold Index (0.0 to 6.0)
+ * @param rh_crit         Critical Humidity, humidity required for Growth Conditions (%)
  * @param mold_risk_status Risk Level Enum (0=Clean, 1=Warning, 2=Critical)
  * @param growth_status   Boolean indicating if mold is actively growing
  */
-void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status, bool is_simulation_node);
+void msg_send_mold_status(char* message_type, char* room_name, float temp_c, float rh_percent, float mold_index, int mold_risk_status, bool growth_status, float rh_crit, bool is_simulation_node);
 
 /**
  * @brief Sends System Health diagnostic data.
