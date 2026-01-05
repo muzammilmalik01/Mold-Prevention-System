@@ -2,4 +2,4 @@ build/
 build_/
 cmake-build-/
 .west/
-*.DS_Store
+.DS_Store
