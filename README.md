@@ -1,8 +1,8 @@
-# AERIS - Indoor Air Quality Monitoring System (Embedded Firmware)
+# KLMIA Sense - Mold Prevention System (Embedded Firmware)
 
-**Firmware for the Nordic nRF52840 Sensor Nodes**
+**Firmware for the Nordic nRF52840 Sensor Nodes and Server Nodes**
 
-This repository contains the embedded firmware for the **AERIS** system, a Real-Time IoT solution designed to predict and prevent indoor mold growth. The system uses dual-sensor redundancy and the **VTT Mold Index model** (Edge Computing) to detect risks before they become visible.
+This repository contains the embedded firmware for the **KLIMA Sense** system, a Real-Time IoT solution designed to predict and prevent indoor mold growth. The system uses dual-sensor redundancy and the **VTT Mold Index model** (Edge Computing) to detect risks before they become visible.
 
 ## 🏗️ System Architecture
 
