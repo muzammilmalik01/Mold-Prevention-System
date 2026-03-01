@@ -1,4 +1,4 @@
-/*
+/**
  * @file main.c
  * @brief Main Firmware for the Sensor Node
  * * This firmware implements a multi-threaded RTOS architecture for:

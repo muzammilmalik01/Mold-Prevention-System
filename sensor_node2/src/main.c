@@ -32,7 +32,7 @@
 #define ROOM_NAME "Office Room"
 #define ALERT_MESSAGE "ALERT"
 #define DATA_MESSAGE "DATA"
-#define TIME_STEP 1.0f
+#define TIME_STEP 6.0f
 #define STACK_SIZE 2048
 #define IS_SIMULATION_NODE true
 int sim_flag = IS_SIMULATION_NODE ? 1 : 0;
@@ -70,33 +70,41 @@ K_THREAD_STACK_DEFINE(simple_data_stack, STACK_SIZE);
 
 
 bool get_simulated_weather(float *temp, float *hum) {
-        // 1 Real Minute = 1 Simulated Hour
-        // k_uptime_get() returns milliseconds. 
-        // Divide by 60,000 to get "Real Minutes" which equal "Sim Hours".
-        int64_t sim_hour = k_uptime_get() / 60000; 
+        // --- DEMO MODE CONFIGURATION ---
+        // Cycle changes every 30 seconds
+        int cycle_duration_sec = 30; 
         
-        // Use modulo (%) to loop the 300-hour cycle automatically
-        int64_t current_cycle_hour = sim_hour % 300;
+        // Get current time in seconds
+        int64_t uptime_sec = k_uptime_get() / 1000;
+        
+        // Determine which "Phase" of the demo we are in (0, 1, or 2)
+        int phase = (uptime_sec / cycle_duration_sec) % 3;
     
-        bool is_valid = true;
+        switch (phase) {
+            case 0: 
+                // PHASE 1: "German Living Room" (Optimal)
+                // Comfortable, safe. Dashboard is GREEN.
+                *temp = 21.5; 
+                *hum = 45.0; 
+                break;
     
-        // --- PHASE 1: TROPICAL STORM (Hours 0-100) ---
-        if (current_cycle_hour <= 100) {
-            *temp = 28.0; 
-            *hum = 95.0; 
-        } 
-        // --- PHASE 2: DRY SPELL (Hours 101-200) ---
-        else if (current_cycle_hour <= 200) {
-            *temp = 25.0;
-            *hum = 45.0; 
-        }
-        // --- PHASE 3: FREEZE (Hours 201-299) ---
-        else {
-            *temp = 5.0; 
-            *hum = 90.0; 
+            case 1: 
+                // PHASE 2: "Wäschetrocknen" (Drying Clothes / High Risk)
+                // Warm and very humid. Dashboard turns RED. Alert sends.
+                *temp = 24.0; 
+                *hum = 88.0; 
+                break;
+    
+            case 2: 
+                // PHASE 3: "Stoßlüften" (Shock Ventilation)
+                // Windows open in winter. Cold, dry air rushes in.
+                // Dashboard recovers to GREEN/BLUE.
+                *temp = 8.0; 
+                *hum = 35.0; 
+                break;
         }
         
-        return is_valid;
+        return true; // Always valid for simulation
     }
 
 /*
@@ -286,7 +294,7 @@ void vtt_model_entry_point(void *p1, void *p2, void *p3){
                 } else {
                         LOG_WRN("[VTT] Skipped: Sensors unavailable");
                 }
-                k_msleep(60000); 
+                k_msleep(2000); 
         }
 }
 

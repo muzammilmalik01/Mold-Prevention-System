@@ -160,7 +160,6 @@ void vtt_update(vtt_state_t *ctx, float temp_c, float rh_percent, float time_ste
 
         // Step A: Determine Decline Rate based on Dry Duration
         // Short dry spells cause slow decline; long spells kill spores faster.
-        // TODO: Decide Decline Rates - Temporary decline rates, these are not final - will have to further research to get the best rates.
         if (ctx->time_dry_hours <= 6.0f){
             decline_rate = -0.00133f; //Initial resistance (Latency)
         } else if (ctx->time_dry_hours <= 24.0f) { 
