@@ -29,12 +29,12 @@
 
 
 // * --- CONFIGURATION --- *
-#define ROOM_NAME "Living Room"
+#define ROOM_NAME "Bathroom"
 #define ALERT_MESSAGE "ALERT"
 #define DATA_MESSAGE "DATA"
 #define TIME_STEP 1.0f
 #define STACK_SIZE 2048
-#define IS_SIMULATION_NODE false
+#define IS_SIMULATION_NODE true
 int sim_flag = IS_SIMULATION_NODE ? 1 : 0;
 
 // * --- Global Status Flags (Protected by Logic) --- *
@@ -69,33 +69,17 @@ K_THREAD_STACK_DEFINE(simple_data_stack, STACK_SIZE);
 
 
 bool get_simulated_weather(float *temp, float *hum) {
-        // 1 Real Minute = 1 Simulated Hour
-        // k_uptime_get() returns milliseconds. 
-        // Divide by 60,000 to get "Real Minutes" which equal "Sim Hours".
-        int64_t sim_hour = k_uptime_get() / 60000; 
+        // 1 Real Second = 1 Simulated Hour (Divide by 1000)
+        int64_t sim_hour = k_uptime_get() / 1000; 
         
-        // Use modulo (%) to loop the 300-hour cycle automatically
-        int64_t current_cycle_hour = sim_hour % 300;
+        // 24-hour cycle
+        int64_t current_cycle_hour = sim_hour % 24;
     
-        bool is_valid = true;
-    
-        // --- PHASE 1: TROPICAL STORM (Hours 0-100) ---
-        if (current_cycle_hour <= 100) {
-            *temp = 28.0; 
-            *hum = 95.0; 
-        } 
-        // --- PHASE 2: DRY SPELL (Hours 101-200) ---
-        else if (current_cycle_hour <= 200) {
-            *temp = 25.0;
-            *hum = 45.0; 
-        }
-        // --- PHASE 3: FREEZE (Hours 201-299) ---
-        else {
-            *temp = 5.0; 
-            *hum = 90.0; 
-        }
+        // SCENARIO A: CONSTANT TROPICAL ENVIRONMENT (Bathroom)
+        *temp = 24.0; 
+        *hum = 90.0; 
         
-        return is_valid;
+        return true;
     }
 
 /*
@@ -237,7 +221,7 @@ void simple_data_entry_point(void *p1, void *p2, void *p3){
                 } else {
                         LOG_WRN("[TELEMETRY] Skipped: Sensors unavailable");
                 }
-                k_msleep(60000);
+                k_msleep(1000);
         }
 }
 
@@ -284,7 +268,7 @@ void vtt_model_entry_point(void *p1, void *p2, void *p3){
                 } else {
                         LOG_WRN("[VTT] Skipped: Sensors unavailable");
                 }
-                k_msleep(3600000); // 1 hour = 3600000 milliseconds
+                k_msleep(1000);
         }
 }
 

@@ -29,10 +29,10 @@
 
 
 // * --- CONFIGURATION --- *
-#define ROOM_NAME "Office Room"
+#define ROOM_NAME "Bedroom"
 #define ALERT_MESSAGE "ALERT"
 #define DATA_MESSAGE "DATA"
-#define TIME_STEP 6.0f
+#define TIME_STEP 1.0f
 #define STACK_SIZE 2048
 #define IS_SIMULATION_NODE true
 int sim_flag = IS_SIMULATION_NODE ? 1 : 0;
@@ -70,41 +70,23 @@ K_THREAD_STACK_DEFINE(simple_data_stack, STACK_SIZE);
 
 
 bool get_simulated_weather(float *temp, float *hum) {
-        // --- DEMO MODE CONFIGURATION ---
-        // Cycle changes every 30 seconds
-        int cycle_duration_sec = 30; 
+        // 1 Real Second = 1 Simulated Hour (Divide by 1000)
+        int64_t sim_hour = k_uptime_get() / 1000; 
         
-        // Get current time in seconds
-        int64_t uptime_sec = k_uptime_get() / 1000;
-        
-        // Determine which "Phase" of the demo we are in (0, 1, or 2)
-        int phase = (uptime_sec / cycle_duration_sec) % 3;
+        // 24-hour cycle
+        int64_t current_cycle_hour = sim_hour % 24;
     
-        switch (phase) {
-            case 0: 
-                // PHASE 1: "German Living Room" (Optimal)
-                // Comfortable, safe. Dashboard is GREEN.
-                *temp = 21.5; 
-                *hum = 45.0; 
-                break;
-    
-            case 1: 
-                // PHASE 2: "Wäschetrocknen" (Drying Clothes / High Risk)
-                // Warm and very humid. Dashboard turns RED. Alert sends.
-                *temp = 24.0; 
-                *hum = 88.0; 
-                break;
-    
-            case 2: 
-                // PHASE 3: "Stoßlüften" (Shock Ventilation)
-                // Windows open in winter. Cold, dry air rushes in.
-                // Dashboard recovers to GREEN/BLUE.
-                *temp = 8.0; 
-                *hum = 35.0; 
-                break;
+        // SCENARIO B: COLD & DAMP TO HEATED & VENTILATED (Bedroom)
+        if (current_cycle_hour < 12) {
+            *temp = 15.0; // Cold walls
+            *hum = 85.0;  // Damp air
+        } 
+        else {
+            *temp = 20.0; // User heated the room
+            *hum = 45.0;  // User ventilated
         }
         
-        return true; // Always valid for simulation
+        return true;
     }
 
 /*
@@ -247,7 +229,7 @@ void simple_data_entry_point(void *p1, void *p2, void *p3){
                 } else {
                         LOG_WRN("[TELEMETRY] Skipped: Sensors unavailable");
                 }
-                k_msleep(50000);
+                k_msleep(1000);
         }
 }
 
@@ -294,7 +276,7 @@ void vtt_model_entry_point(void *p1, void *p2, void *p3){
                 } else {
                         LOG_WRN("[VTT] Skipped: Sensors unavailable");
                 }
-                k_msleep(2000); 
+                k_msleep(1000);
         }
 }
 
